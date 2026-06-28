@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Stock Viewer</title>
+
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        form { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        input, select, button { padding: 6px 10px; font-size: 14px; }
+        #interval-group { display: none; }
+        .error { margin-top: 16px; padding: 10px 14px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; color: #856404; }
+        .stock-table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        .stock-table th, .stock-table td { border: 1px solid #ccc; padding: 8px 12px; text-align: right; }
+        .stock-table th { background-color: #f0f0f0; text-align: center; }
+        .stock-table tr:nth-child(even) { background-color: #fafafa; }
+        .stock-table td:first-child, .stock-table th:first-child { text-align: left; }
+    </style>
+
+</head>
+
+<body>
+
+<h2>Stock Market Viewer</h2>
+
+<form method="POST">
+
+    <input
+        name="symbol"
+        value="{{ symbol }}"
+        placeholder="Ticker">
+
+    <select name="series" id="series-select" onchange="toggleInterval()">
+        <option value="daily"    {% if series == 'daily'    %}selected{% endif %}>Daily</option>
+        <option value="weekly"   {% if series == 'weekly'   %}selected{% endif %}>Weekly</option>
+        <option value="monthly"  {% if series == 'monthly'  %}selected{% endif %}>Monthly</option>
+        <option value="intraday" {% if series == 'intraday' %}selected{% endif %}>Intraday</option>
+    </select>
+
+    <span id="interval-group">
+        <label for="interval-select">Interval:</label>
+        <select name="interval" id="interval-select">
+            <option value="1min"  {% if interval == '1min'  %}selected{% endif %}>1 min</option>
+            <option value="5min"  {% if interval == '5min'  %}selected{% endif %}>5 min</option>
+            <option value="15min" {% if interval == '15min' %}selected{% endif %}>15 min</option>
+            <option value="30min" {% if interval == '30min' %}selected{% endif %}>30 min</option>
+            <option value="60min" {% if interval == '60min' %}selected{% endif %}>60 min</option>
+        </select>
+    </span>
+
+    <button type="submit">Search</button>
+
+</form>
+
+<script>
+    function toggleInterval() {
+        var s = document.getElementById("series-select").value;
+        document.getElementById("interval-group").style.display =
+            s === "intraday" ? "inline" : "none";
+    }
+    toggleInterval();
+</script>
+
+{% if error %}
+<div class="error"><strong>Error:</strong> {{ error }}</div>
+{% endif %}
+
+{% if table %}
+
+<h3>{{ symbol }} — {{ series_label }} OHLV</h3>
+
+{{ table | safe }}
+
+{% endif %}
+
+
+</body>
+
+</html>
