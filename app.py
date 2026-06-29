@@ -85,14 +85,14 @@ def get_stock_data(symbol, series="daily", interval="5min"):
     df["Open"]   = df["1. open"].astype(float)
     df["High"]   = df["2. high"].astype(float)
     df["Low"]    = df["3. low"].astype(float)
+    df["Close"]  = df["4. close"].astype(float)
     df["Volume"] = df["5. volume"].astype(int)
 
-    df = df[["Open", "High", "Low", "Volume"]]
+    df = df[["Open", "High", "Low", "Close", "Volume"]]
     df = df.sort_index(ascending=False)
     df.index.name = config["index_name"]
     df.index = df.index.strftime(config["date_fmt"])
-    df.columns = ["Open ($)", "High ($)", "Low ($)", "Volume (shares)"]
-
+    df.columns = ["Open ($)", "High ($)", "Low ($)", "Close ($)", "Volume (shares)"]
     return df, None
 
 
